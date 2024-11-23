@@ -2,6 +2,7 @@ import time
 import resource
 import hashlib
 import blake3
+import pandas as pd
 
 # Function to measure execution time and memory usage
 def measure_performance(algorithm, data):
@@ -24,20 +25,26 @@ def measure_performance(algorithm, data):
     return execution_time, memory_usage
 
 # Generate random data of varying sizes
-data_1kb = b"random_data" * 128  # 1KB
-data_1mb = b"random_data" * 1024 * 1024  # 1MB
+data_sizes = [1024, 10240, 102400, 1024000]  # 1KB, 10KB, 100KB, 1000KB
+results = []
 
-# Measure performance for both algorithms
-sha256_time_1kb, sha256_memory_1kb = measure_performance('sha256', data_1kb)
-blake3_time_1kb, blake3_memory_1kb = measure_performance('blake3', data_1kb)
+for size in data_sizes:
+    data = b"random_data" * (size // 10)  # Create data based on the size
+    
+    sha256_time, sha256_memory = measure_performance('sha256', data)
+    blake3_time, blake3_memory = measure_performance('blake3', data)
+    
+    # Append the results to the list
+    results.append({
+        "Data Size (KB)": size // 1024,
+        "SHA-256 Execution Time (s)": sha256_time,
+        "SHA-256 Memory Usage (KB)": sha256_memory,
+        "BLAKE3 Execution Time (s)": blake3_time,
+        "BLAKE3 Memory Usage (KB)": blake3_memory
+    })
 
-# Output the results
-print(f"SHA-256 - 1KB: Time = {sha256_time_1kb:.6f}s, Memory = {sha256_memory_1kb}KB")
-print(f"BLAKE3 - 1KB: Time = {blake3_time_1kb:.6f}s, Memory = {blake3_memory_1kb}KB")
+# Convert results to DataFrame for better visualization
+df = pd.DataFrame(results)
 
-# Run for larger data
-sha256_time_1mb, sha256_memory_1mb = measure_performance('sha256', data_1mb)
-blake3_time_1mb, blake3_memory_1mb = measure_performance('blake3', data_1mb)
-
-print(f"SHA-256 - 1MB: Time = {sha256_time_1mb:.6f}s, Memory = {sha256_memory_1mb}KB")
-print(f"BLAKE3 - 1MB: Time = {blake3_time_1mb:.6f}s, Memory = {blake3_memory_1mb}KB")
+# Display the results
+print(df)
