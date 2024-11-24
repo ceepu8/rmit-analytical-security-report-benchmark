@@ -1,46 +1,132 @@
-# Python Code Example for Benchmarking.
-## **Guide to running Python code on MacBook Pro M1 and getting parameters for reports**
+# Cryptographic Algorithms Benchmark
 
-### **Step 1: Install Python and necessary libraries**
-Before starting, you need to make sure that you have Python 3.13.0 installed on your MacBook Pro M1.
+This repository contains benchmark tests comparing different cryptographic algorithms:
 
-1. **Install Python 3.13.0** (if not already installed):
-- You can download and install the latest version of Python from the official site: [https://www.python.org/downloads/](https://www.python.org/downloads/).
-- After installation, you can check by opening **Terminal** and typing:
+- SHA-256 vs BLAKE3
+- AES-256-GCM vs ChaCha20-Poly1305
+- RSA-4096 vs Curve25519
+
+## Prerequisites
+
+### 1. Install Python 3 using Homebrew (python 3.13.0 or higher)
+
+```bash
+brew install python3
+```
+
+### 2. Verify Python Installation
+
 ```bash
 python3 --version
 ```
-This will display the current version of Python, make sure you are using Python 3.13.0.
 
-2. **Install Required Libraries:**
-- Although the code doesn't require installing additional libraries beyond standard Python, you can still make sure that libraries like **random**, **string**, **time**, and **resource** are available in your Python environment.
+## Project Setup
 
-### **Step 2: Run the Python Code**
+### 1. Clone the Repository
 
-1. **Create a Python File**:
-- Open a **Text Editor** or **IDE** (like **Visual Studio Code**, **PyCharm**, or **Sublime Text**) and create a new file called **benchmark.py**.
-- Paste the provided Python code into this file.
-
-2. **Run the Python Code in Terminal**:
-- Open **Terminal** on your Mac.
-- Navigate to the directory containing the **benchmark.py** file (for example, if your file is in the **RMIT/code-test** folder, type the following command in Terminal):
 ```bash
-cd ~/code-test
+git clone https://github.com/ceepu8/rmit-analytical-security-report-benchmark.git
+cd rmit-analytical-security-report-benchmark
 ```
-- Run the Python file using the command:
+
+### 2. Create and Activate Virtual Environment
+
 ```bash
-python3 benchmark.py
+python3 -m venv venv
+source venv/bin/activate
 ```
 
-### **Step 3: Get the result parameters**
-After running the code, you will get results similar to the following in Terminal:
+### 3. Install Required Dependencies
 
-```
-Data Size: 1KB | Execution Time: 0.00012 seconds | Memory Usage: 0.52 KB
-Data Size: 10KB | Execution Time: 0.00122 seconds | Memory Usage: 5.24 KB
-Data Size: 100KB | Execution Time: 0.01234 seconds | Memory Usage: 52.68 KB
-Data Size: 1000KB | Execution Time: 0.12345 seconds | Memory Usage: 524.78 KB
+```bash
+pip3 install pandas blake3 pycryptodome
 ```
 
-- **Execution Time**: The time it takes for the program to process data. This parameter is measured in seconds.
-- **Memory Usage**: The amount of memory the program uses during execution, measured in kilobytes (KB).
+## Running the Benchmarks
+
+### 1. Hash Algorithms Comparison (SHA-256 vs BLAKE3)
+
+```bash
+cd hash_algorithms
+python3 hash_comparison.py
+```
+
+Expected output:
+
+```
+   Data Size (KB)  SHA-256 Execution Time (s)  SHA-256 Memory Usage (KB)  BLAKE3 Execution Time (s)  BLAKE3 Memory Usage (KB)
+0               1                    0.000028                          0                   0.000060                     49152
+1              10                    0.000007                          0                   0.000012                         0
+2             100                    0.000048                          0                   0.000066                         0
+3            1000                    0.000468                          0                   0.000608                         0
+```
+
+### 2. Encryption Algorithms Comparison (AES-256-GCM vs ChaCha20-Poly1305)
+
+```bash
+cd encryption_algorithms
+python3 encryption_comparison.py
+```
+
+Expected output:
+
+```
+   Data Size (KB)  AES-256-GCM Execution Time (s)  AES-256-GCM Memory Usage (KB)  ChaCha20-Poly1305 Execution Time (s)  ChaCha20-Poly1305 Memory Usage (KB)
+0               1                        0.001194                          98304                              0.000155                                16384
+1              10                        0.000134                          16384                              0.000054                                    0
+2             100                        0.000839                              0                              0.000326                                16384
+3            1000                        0.008192                        2277376                              0.003094                                16384
+```
+
+### 3. Key Exchange Algorithms Comparison (RSA-4096 vs Curve25519)
+
+```bash
+cd key_exchange_algorithms
+python3 key_exchange_comparison.py
+```
+
+Expected output:
+
+```
+   Data Size (KB)  RSA-4096 Execution Time (s)  RSA-4096 Memory Usage (KB)  ECC-P256 Execution Time (s)  ECC-P256 Memory Usage (KB)
+0               1                     2.542103                      491520                     0.008516                      376832
+1              10                     4.032274                       81920                     0.001685                           0
+2             100                     1.386309                      524288                     0.002113                           0
+3            1000                     2.787002                     4587520                     0.007020                           0
+```
+
+## Troubleshooting
+
+If you encounter any errors:
+
+1. Make sure all dependencies are installed correctly:
+
+```bash
+pip3 list
+```
+
+2. Verify you're using Python 3.7 or higher:
+
+```bash
+python3 --version
+```
+
+3. If you get import errors, ensure you're in the virtual environment:
+
+```bash
+source venv/bin/activate
+```
+
+## Notes
+
+- The benchmark results may vary depending on your hardware specifications
+- Each test measures both execution time and memory usage
+- Data sizes tested: 1KB, 10KB, 100KB, 1MB
+
+## System Requirements
+
+- Python 3.13.0 or higher
+- macOS, Linux, or Windows
+- Minimum 4GB RAM recommended
+
+---
